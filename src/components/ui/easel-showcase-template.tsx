@@ -2,12 +2,12 @@
 
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react"
 
-// Easel Showcase Template — a one-page portfolio for Kedhareswer, laid out like a gallery that sells art:
+// Easel Showcase Template — a one-page portfolio for Douglas Michelini, laid out like a gallery that sells art:
 // a fanned deck of work that collapses and re-deals itself down a staircase as you scroll, a pinned
 // "whether you're…" paragraph that inks in word by word while its deck riffles, a folder that files the
 // cards away, drifting avatar bands, a bento of projects, a banner that shrinks into a portrait wall,
 // pricing cards and a lime marquee whose doodles drop and pile up with real collisions.
-// Every picture is a generated original served from the component site (see README).
+// Every picture comes from the previous portfolio and is served locally from public/.
 //
 // Motion (read frame by frame off the reference recording, 1440 × 862 viewport, see README):
 //   words: blur(8px) + 0.25em rise → sharp, 0.7s cubic-bezier(.22,1,.36,1), 70ms per word
@@ -176,28 +176,163 @@ export function stepBalls(bs: Ball[], W: number, H: number, dt: number, g = 2600
 export const settled = (bs: Ball[]) => bs.every((b) => Math.abs(b.vx) < 6 && Math.abs(b.vy) < 6)
 // #endregion
 
-const IMG_BASE = "https://kedhar-components.pages.dev/easel-showcase-template/"
+// #region content (migrated from the previous portfolio, meu-portfolio)
+const LINKS = {
+  github: "https://github.com/DouglassenG/",
+  linkedin: "https://www.linkedin.com/in/douglas-michelini/",
+  whatsapp: "https://api.whatsapp.com/send?phone=051996979539",
+}
+const ROLE = "Desenvolvedor Full Stack"
+const HERO_TEXT =
+  "Transformando ideias complexas em experiências digitais fluidas. Construo arquiteturas robustas e interfaces intuitivas que impulsionam o sucesso do seu projeto."
+const PROJECTS_TEXT =
+  "Uma seleção cuidadosa de projetos que demonstram minha expertise em construir interfaces modernas, performáticas e escaláveis."
 
-// stage 1 deck, back → front (the last card is the one that rises first)
-const DECK_IMG = ["a5", "b6", "a3", "a4", "a2", "b4", "a6", "a1"]
-// stage 2 deck: perfume, info card, five photos (b5 on top)
-const DECK2_IMG = ["b6", "", "b1", "b2", "b3", "b4", "b5"]
-const AV_TOP = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13", "v14", "v15", "v16"]
-const AV_BOT = ["w1", "w2", "w3", "w4", "w5", "w6", "w7", "w8", "w9", "w10", "w11", "w12", "w13", "w14", "w15", "w16"]
-const WALL = ["w3", "v5", "w9", "v12", "w14", "v2", "w6", "", "v9", "w11", "v14", "w1", "v7", "w16", "v11"]
-const ARCHIVE = [
-  { k: "c3", t: "Dot Matrix" },
-  { k: "c4", t: "Chroma Wave" },
-  { k: "c5", t: "Ribbon Study" },
-  { k: "c6", t: "Parrot Club" },
-  { k: "a4", t: "Soft Nap" },
-  { k: "b5", t: "Cloud Form" },
-  { k: "a6", t: "Straw Hat" },
-  { k: "b2", t: "Green Lawn" },
+type Project = { name: string; img: string; goal: string; stack: string; impact: string; github: string; site: string }
+const PROJECTS: Project[] = [
+  {
+    name: "Dokei",
+    img: "projetos/dokei.png",
+    goal: "Plataforma SaaS completa para Microempreendedores Individuais (MEIs) brasileiros, simplificando a gestão fiscal e financeira diante da reforma tributária.",
+    stack: "Next.js 14, TypeScript, Tailwind CSS, Prisma, Clerk, Vercel",
+    impact: "Sistema em produção com autenticação segura, dashboard responsivo, assistente IA integrada e fluxo financeiro completo do cadastro ao relatório.",
+    github: "https://github.com/DouglassenG/dokei",
+    site: "https://dokei-web-xhrp.vercel.app/",
+  },
+  {
+    name: "Dashboard Industrial",
+    img: "projetos/industrial_dashboard.png",
+    goal: "Painel de monitoramento em tempo real para indicadores de produção industrial, com visualização de dados interativa e responsiva.",
+    stack: "React, TypeScript, Recharts, Tailwind CSS, Vite",
+    impact: "Dashboard de alta performance com gráficos dinâmicos e layout adaptável, entregando leitura instantânea de KPIs operacionais.",
+    github: "https://github.com/DouglassenG/industrial_dashboard",
+    site: "https://industrial-dashboard-web.vercel.app/",
+  },
+  {
+    name: "Agenda Médica",
+    img: "projetos/agenda-medica.jpeg",
+    goal: "Sistema de agendamento médico com autenticação, gerenciamento de consultas e interface responsiva.",
+    stack: "Python, Flask, SQLite, Docker, Pytest, Tabulator.js",
+    impact: "Aplicação containerizada com Docker Compose, cobertura de 8 testes automatizados e interface glassmorphism funcional.",
+    github: "https://github.com/DouglassenG/agenda-medica",
+    site: "",
+  },
+  {
+    name: "Astrologia do Norte",
+    img: "projetos/astrologia_do_norte.png",
+    goal: "Plataforma web sofisticada para consultas astrológicas, focada em uma experiência visual imersiva e mística.",
+    stack: "Next.js 15, React 19, Tailwind CSS, Framer Motion, TypeScript",
+    impact: "Aumento de 300% na velocidade de carregamento através de Code Splitting e otimização de ativos com Vite.",
+    github: "https://github.com/DouglassenG/astrologia_do_norte",
+    site: "https://astrologia-do-norte.vercel.app/",
+  },
+  {
+    name: "KR Studio",
+    img: "projetos/kr_studio.jpg",
+    goal: "Uma presença digital elegante e performática. Este projeto representa a interface web do KR Studio, focando em serviços e portfólio visual.",
+    stack: "HTML5, SCSS, JavaScript, Gulp",
+    impact: "Otimização de assets e o uso do Vite para o bundle resultaram em um carregamento inicial (LCP) inferior a 1.5s.",
+    github: "https://github.com/DouglassenG/kr_studio",
+    site: "https://kr-studio.vercel.app/",
+  },
+  {
+    name: "Clone Disney+",
+    img: "projetos/clone_disney+.png",
+    goal: "Recriação da interface do Disney+ para estudo de layouts complexos e consumo de APIs de streaming.",
+    stack: "React, Styled Components, Firebase, TMDB API",
+    impact: "Fidelidade visual de 95% em relação à plataforma original, com navegação fluida entre categorias.",
+    github: "https://github.com/DouglassenG/clone_disneyplus",
+    site: "https://clone-disneyplus-ruby-kappa.vercel.app/",
+  },
+  {
+    name: "Efood",
+    img: "projetos/efood.png",
+    goal: "Plataforma de delivery completa, desde a seleção de restaurantes até o checkout seguro.",
+    stack: "React, Redux, TypeScript, Styled Components",
+    impact: "Fluxo de compra otimizado resultando em uma experiência de usuário sem fricção.",
+    github: "https://github.com/DouglassenG/efood",
+    site: "https://efood-green-xi.vercel.app/",
+  },
+  {
+    name: "Universo Hamburguer",
+    img: "projetos/universo_hamburguer.png",
+    goal: "Cardápio digital interativo para hamburgueria artesanal.",
+    stack: "HTML, CSS, JavaScript, jQuery",
+    impact: "Experiência de escolha de produtos visualmente apetitosa e direta.",
+    github: "https://github.com/DouglassenG/universo_hamburguer",
+    site: "https://universo-hamburguer.vercel.app/",
+  },
+  {
+    name: "Github API",
+    img: "projetos/github_api.png",
+    goal: "Explorador de perfis e repositórios do GitHub utilizando a API oficial da plataforma.",
+    stack: "React, Fetch API, Tailwind CSS, GitHub API",
+    impact: "Visualização clara de métricas de desenvolvedores com busca em tempo real.",
+    github: "https://github.com/DouglassenG/github_perfil",
+    site: "https://github-perfil-dmsr.vercel.app/",
+  },
+  {
+    name: "Minhas Tarefas",
+    img: "projetos/minhas_tarefas.png",
+    goal: "Gerenciador de tarefas produtivo com sistema de categorias e prioridades.",
+    stack: "React, Redux Toolkit, Styled Components",
+    impact: "Interface organizada que facilita a gestão do dia a dia do usuário.",
+    github: "https://github.com/DouglassenG/minhas-tarefas",
+    site: "https://minhas-tarefas-one-gamma.vercel.app/",
+  },
+  {
+    name: "Calculadora IMC",
+    img: "projetos/calculadora_imc.png",
+    goal: "Ferramenta de saúde para cálculo rápido de Índice de Massa Corporal com feedback visual instantâneo.",
+    stack: "React, JavaScript, CSS Modules, Responsive Design",
+    impact: "Interface intuitiva que guia o usuário através dos parâmetros de saúde de forma clara.",
+    github: "https://github.com/DouglassenG/projeto_react_imc",
+    site: "https://projeto-react-imc-nine.vercel.app/",
+  },
+  {
+    name: "Sorteador",
+    img: "projetos/sorteador.png",
+    goal: "Aplicação simples e eficaz para realização de sorteios numéricos.",
+    stack: "HTML, CSS, JavaScript, Less",
+    impact: "Ferramenta leve e funcional para sorteios rápidos em qualquer dispositivo.",
+    github: "https://github.com/DouglassenG/sorteador_grunt",
+    site: "https://sorteador-grunt-two-smoky.vercel.app/",
+  },
+  {
+    name: "Todo Vue",
+    img: "projetos/todo_vue.png",
+    goal: "Aplicação de lista de tarefas desenvolvida para explorar o ecossistema Vue.js.",
+    stack: "Vue.js 3, Composition API, Vite",
+    impact: "Demonstração de reatividade e gerenciamento de estado eficiente no Vue.",
+    github: "https://github.com/DouglassenG/todo-vue",
+    site: "https://todo-vue-rose-beta.vercel.app/",
+  },
 ]
-const SLIDES = ["gate", "muse", "meet"]
-const CLIENTS = ["Client 1", "Client 2", "Client 3", "Client 4", "Client 5", "Client 6"]
-const NAV = ["Get Started", "Start a project", "Pricing", "Contact", "Process", "Archive"]
+const P = PROJECTS
+/** the project's live site, or its repository when there is none */
+const projectHref = (p: Project) => p.site || p.github
+const EXT = { target: "_blank", rel: "noopener noreferrer" } as const
+// #endregion
+
+// stage 1 deck, back → front (the last card is the one that rises first): projects 1 to 8
+const DECK_IMG = P.slice(0, 8).map((p) => p.img)
+// stage 2 deck: project 9, info card, projects 10 to 13, Dokei on top
+const DECK2_IMG = [P[8].img, "", P[9].img, P[10].img, P[11].img, P[12].img, P[0].img]
+// avatar bands (pending: no matching content in the old portfolio) reuse the old portfolio's pictures
+const AV_TOP = [...P.map((p) => p.img), "image_avatar.jpeg", "hero.jpg", "icon.png"]
+const AV_BOT = [...AV_TOP].reverse()
+const WALL = [...P.slice(0, 7).map((p) => p.img), "", ...P.slice(7).map((p) => p.img), "hero.jpg"]
+const ARCHIVE = P.slice(4).map((p) => ({ k: p.img, t: p.name, href: projectHref(p) }))
+const SLIDES = [P[0], P[1], P[3]]
+const CLIENTS = ["React", "TypeScript", "Next.js", "Tailwind CSS", "Python", "Vue.js"]
+const NAV = [
+  { l: "Sobre", h: "#top" },
+  { l: "Projetos", h: "#work" },
+  { l: "Destaques", h: "#story" },
+  { l: "Arquivo", h: "#archive" },
+  { l: "Contato", h: "mailto" },
+  { l: "GitHub", h: LINKS.github },
+]
 
 // line-art doodles: one path set per icon, drawn on a 24-unit grid
 const DOODLES = [
@@ -234,6 +369,9 @@ const ICON = {
   grid: "M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z",
   globe: "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18",
   spark: "M12 3v6M12 15v6M3 12h6M15 12h6",
+  github: "M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22",
+  linkedin: "M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2zM4 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4z",
+  whatsapp: "M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1",
 }
 
 function Svg({ d, size = 16, stroke = 1.6, fill = "none" }: { d: string; size?: number; stroke?: number; fill?: string }) {
@@ -276,7 +414,7 @@ export interface EaselShowcaseTemplateProps {
   height?: string
   /** contact address for every call to action */
   email?: string
-  /** where the pictures live; defaults to the component site */
+  /** where the pictures live; defaults to the site root (public/) */
   assetBase?: string
   className?: string
   style?: CSSProperties
@@ -284,12 +422,13 @@ export interface EaselShowcaseTemplateProps {
 
 export default function EaselShowcaseTemplate({
   height = "100svh",
-  email = "kedhareswer.12110626@gmail.com",
+  email = "contatodmichelini97@gmail.com",
   assetBase,
   className,
   style,
 }: EaselShowcaseTemplateProps) {
-  const pic = (k: string) => (assetBase ? assetBase.replace(/\/?$/, "/") : IMG_BASE) + k + ".webp"
+  /** local pictures copied from the old portfolio into public/ */
+  const local = (file: string) => (assetBase ? assetBase.replace(/\/?$/, "/") : "/") + file
   const mail = "mailto:" + email
 
   const rootRef = useRef(null as HTMLDivElement | null)
@@ -628,75 +767,75 @@ export default function EaselShowcaseTemplate({
       <style>{CSS}</style>
 
       <header ref={navRef} className="ea-nav">
-        <a className="ea-brand" href="#top" aria-label="Kedhareswer, home">
+        <a className="ea-brand" href="#top" aria-label="Douglas Michelini, início">
           <span className="ea-logo">
-            <Svg d={ICON.logo} size={22} stroke={2.2} />
+            <img src={local("icon.png")} alt="" width={22} height={22} />
           </span>
-          Kedhareswer
+          Douglas Michelini
         </a>
-        <nav className="ea-links" aria-label="Main">
-          {NAV.map((l, i) => (
-            <a key={l} className="ea-link" href={i === 3 ? mail : "#" + l.toLowerCase().replace(/ /g, "-")}>
+        <nav className="ea-links" aria-label="Principal">
+          {NAV.map((n, i) => (
+            <a key={n.l} className="ea-link" href={n.h === "mailto" ? mail : n.h} {...(n.h.startsWith("http") ? EXT : {})}>
               {i === 1 && <i className="ea-dot" aria-hidden="true" />}
-              {l}
+              {n.l}
             </a>
           ))}
         </nav>
         <div className="ea-tools">
-          <a className="ea-round" href={mail} aria-label="Write to Kedhareswer">
+          <a className="ea-round" href={LINKS.linkedin} {...EXT} aria-label="LinkedIn de Douglas Michelini">
             <Svg d={ICON.user} size={15} />
           </a>
-          <button type="button" className="ea-round" aria-label={dark ? "Light theme" : "Dark theme"} aria-pressed={dark} onClick={() => setDark((d) => !d)}>
+          <button type="button" className="ea-round" aria-label={dark ? "Tema claro" : "Tema escuro"} aria-pressed={dark} onClick={() => setDark((d) => !d)}>
             <Svg d={ICON.sun} size={15} />
           </button>
         </div>
       </header>
 
       {/* ---------- stage 1: hero → showcase ---------- */}
-      <section ref={s1} id="top" className="ea-stage" style={stage(3.4)} aria-label="Introduction">
+      <section ref={s1} id="top" className="ea-stage" style={stage(3.4)} aria-label="Introdução">
         <div ref={pin1} className="ea-pin" style={{ height }}>
           <div ref={heroText} className="ea-hero">
             <h1 className="ea-h1">
-              <Words parts={["A place to display", "\n", "my masterpieces."]} />
+              <Words parts={["Douglas", "\n", "Michelini"]} />
             </h1>
             <div className="ea-hero-foot">
               <p className="ea-fade" style={{ ["--d" as string]: "1.9s" } as CSSProperties}>
-                Kedhareswer designs and builds interfaces, and pins every piece of it to this wall.
+                {HERO_TEXT}
               </p>
               <div className="ea-btns ea-fade" style={{ ["--d" as string]: "2.05s" } as CSSProperties}>
-                <a className="ea-btn" href={mail}>
-                  Work with me
+                <a className="ea-btn" href={LINKS.github} {...EXT}>
+                  GitHub
                 </a>
                 <a className="ea-ghost" href="#work">
-                  Read more
+                  Meus projetos
                 </a>
               </div>
             </div>
           </div>
-          <span className="ea-tag ea-t1 ea-blue">@client1</span>
-          <span className="ea-tag ea-t2 ea-mint">@client2</span>
+          <span className="ea-tag ea-t1 ea-blue">@react</span>
+          <span className="ea-tag ea-t2 ea-mint">@typescript</span>
 
           <div ref={showText} id="work" className="ea-show">
             <p className="ea-eyebrow">
-              <Words parts={["SELECTED WORK"]} />
+              <Words parts={["PROJETOS DESTAQUE"]} />
             </p>
             <h2 className="ea-h2 ea-big">
-              <Words parts={["Design, build,", "\n", ["& ship products", "ea-red"], "\n", "from one desk."]} at={2} />
+              <Words parts={["Desenvolvedor", "\n", ["Full Stack", "ea-red"]]} at={2} />
             </h2>
             <p className="ea-body ea-wrapp">
-              <Words parts={["One person across product design and front-end, so an idea goes from frame to production without a hand-off."]} at={9} />
+              <Words parts={[PROJECTS_TEXT]} at={5} />
             </p>
             <div className="ea-btns ea-late">
               <a className="ea-btn" href={mail}>
-                Start a project
+                Contato
               </a>
               <a className="ea-ghost" href="#story">
-                Read more
+                Ver projetos
               </a>
             </div>
           </div>
-          <span className="ea-tag ea-t3 ea-redtag">@client3</span>
-          <span className="ea-tag ea-t4 ea-ink">@client1</span>
+          <span className="ea-tag ea-t3 ea-redtag">@nextjs</span>
+          <span className="ea-tag ea-t4 ea-ink">@react</span>
           <div className="ea-updown" aria-hidden="true">
             <Svg d={ICON.up} size={12} />
             <Svg d={ICON.down} size={12} />
@@ -705,7 +844,7 @@ export default function EaselShowcaseTemplate({
           <div className="ea-deck" aria-hidden="true">
             {DECK_IMG.map((k, i) => (
               <div key={k} ref={(el) => { deck.current[i] = el }} className="ea-card ea-c1">
-                <img src={pic(k)} alt="" width={260} height={282} draggable={false} />
+                <img src={local(k)} alt="" width={260} height={282} draggable={false} />
               </div>
             ))}
           </div>
@@ -713,20 +852,20 @@ export default function EaselShowcaseTemplate({
       </section>
 
       {/* ---------- gateway banner ---------- */}
-      <section className="ea-sec ea-gate" aria-label="Featured case">
+      <section className="ea-sec ea-gate" aria-label="Projeto destaque">
         <div className="ea-wrap">
           <div data-rv className="ea-gate-head">
             <p className="ea-eyebrow">
-              <Words parts={["CASE STUDY BY KEDHARESWER"]} />
+              <Words parts={["PROJETO DESTAQUE"]} />
             </p>
             <h2 className="ea-h2">
-              <Words parts={["Gateway to", "\n", "the work itself."]} at={4} />
+              <Words parts={["Dokei"]} at={2} />
             </h2>
-            <span className="ea-tag ea-ink ea-pop ea-t5">@kedhar</span>
+            <span className="ea-tag ea-ink ea-pop ea-t5">@dokei</span>
           </div>
           <div className="ea-banner" data-rv>
             {SLIDES.map((k, i) => (
-              <img key={k} src={pic(k)} alt={i === slide ? "Project 01 — campaign portrait" : ""} className={i === slide ? "on" : ""} width={1400} height={560} draggable={false} />
+              <img key={k.name} src={local(k.img)} alt={k.name} className={i === slide ? "on" : ""} width={1400} height={560} draggable={false} />
             ))}
             <span className="ea-switch" aria-hidden="true">
               <i />
@@ -735,15 +874,15 @@ export default function EaselShowcaseTemplate({
             <span className="ea-more" aria-hidden="true">
               <Svg d={ICON.dots} size={18} stroke={3} />
             </span>
-            <a className="ea-watch" href={mail}>
+            <a className="ea-watch" href={projectHref(SLIDES[slide])} {...EXT} aria-label={"Visitar " + SLIDES[slide].name}>
               <Svg d={ICON.play} size={9} fill="currentColor" stroke={0} />
-              Watch
+              Visitar
             </a>
             <div className="ea-arrows">
-              <button type="button" aria-label="Previous picture" onClick={() => setSlide((s) => (s + SLIDES.length - 1) % SLIDES.length)}>
+              <button type="button" aria-label="Imagem anterior" onClick={() => setSlide((s) => (s + SLIDES.length - 1) % SLIDES.length)}>
                 <Svg d={ICON.left} size={12} stroke={2} />
               </button>
-              <button type="button" aria-label="Next picture" onClick={() => setSlide((s) => (s + 1) % SLIDES.length)}>
+              <button type="button" aria-label="Próxima imagem" onClick={() => setSlide((s) => (s + 1) % SLIDES.length)}>
                 <Svg d={ICON.right} size={12} stroke={2} />
               </button>
             </div>
@@ -752,14 +891,14 @@ export default function EaselShowcaseTemplate({
       </section>
 
       {/* ---------- trusted by ---------- */}
-      <section className="ea-sec ea-trust" aria-label="Clients">
+      <section className="ea-sec ea-trust" aria-label="Tecnologias">
         <div className="ea-wrap" data-rv>
           <div className="ea-trust-head">
             <div>
               <h2 className="ea-h3">
-                <Words parts={["Trusted by the", ["best.", "ea-grey"]]} />
+                <Words parts={["Tecnologias"]} />
               </h2>
-              <p className="ea-small ea-late">Founders and teams Kedhareswer has shipped with, from first prototype to public launch.</p>
+              <p className="ea-small ea-late">Stack utilizada nos projetos deste portfólio.</p>
             </div>
             <div className="ea-mini-arrows" aria-hidden="true">
               <Svg d={ICON.left} size={11} stroke={2} />
@@ -767,7 +906,7 @@ export default function EaselShowcaseTemplate({
             </div>
           </div>
         </div>
-        <div className="ea-logos" aria-label="Client 1 to Client 6">
+        <div className="ea-logos" aria-label={CLIENTS.join(", ")}>
           <div className="ea-logos-track">
             {[0, 1].map((rep) =>
               CLIENTS.map((c, i) => (
@@ -782,57 +921,57 @@ export default function EaselShowcaseTemplate({
       </section>
 
       {/* ---------- stage 2: whether → staircase → folder ---------- */}
-      <section ref={s2} className="ea-stage" style={stage(3.8)} aria-label="How I work">
+      <section ref={s2} className="ea-stage" style={stage(3.8)} aria-label="Como trabalho">
         <div ref={pin2} className="ea-pin" style={{ height }}>
           <div ref={whether} className="ea-whether">
             <p className="ea-ink-text">
-              {"Whether you're a founder looking to ship your idea".split(" ").map((w, i) => (
+              {"Transformando ideias complexas em experiências digitais fluidas.".split(" ").map((w, i) => (
                 <span key={"a" + i} className="ea-sw">
                   {w}{" "}
                 </span>
               ))}
               <br />
-              {"/ or a team seeking".split(" ").map((w, i) => (
+              {"Construo arquiteturas".split(" ").map((w, i) => (
                 <span key={"b" + i} className="ea-sw">
                   {w}{" "}
                 </span>
               ))}
-              <span className="ea-sw ea-mintw">sharp </span>
-              <span className="ea-sw">interfaces </span>
+              <span className="ea-sw ea-mintw">robustas </span>
+              <span className="ea-sw">e </span>
               <span className="ea-chip ea-sw">
-                <img src={pic("a3")} alt="" width={44} height={44} />
+                <img src={local("icon.png")} alt="" width={44} height={44} />
               </span>{" "}
-              <span className="ea-sw">Kedhareswer </span>
+              <span className="ea-sw">interfaces </span>
               <br />
-              {"connects you to a world of craft".split(" ").map((w, i) => (
+              {"intuitivas que impulsionam o sucesso do".split(" ").map((w, i) => (
                 <span key={"c" + i} className="ea-sw">
                   {w}{" "}
                 </span>
               ))}
               <span className="ea-chip ea-sw">
-                <img src={pic("b3")} alt="" width={44} height={44} />
+                <img src={local("image_avatar.jpeg")} alt="" width={44} height={44} />
               </span>{" "}
-              <span className="ea-sw">and </span>
-              <span className="ea-sw">code.</span>
+              <span className="ea-sw">seu </span>
+              <span className="ea-sw">projeto.</span>
             </p>
             <div className="ea-iconrow" aria-hidden="true">
               <Svg d={ICON.eye} size={14} />
               <Svg d={ICON.grid} size={14} />
               <Svg d={ICON.spark} size={14} />
             </div>
-            <span className="ea-tag ea-ink ea-t6">@client3</span>
-            <span className="ea-tag ea-blue ea-t7">@client1</span>
+            <span className="ea-tag ea-ink ea-t6">@nextjs</span>
+            <span className="ea-tag ea-blue ea-t7">@react</span>
           </div>
 
           <div ref={folder} className="ea-folder" aria-hidden="true">
             <div className="ea-folder-tab">
-              <span>Business</span>
+              <span>Projetos</span>
               <b>
-                <i className="ea-dot" /> Create
+                <i className="ea-dot" /> Criar
               </b>
             </div>
             <div className="ea-folder-bar">
-              <span>Personal</span>
+              <span>Estudos</span>
             </div>
           </div>
 
@@ -841,13 +980,13 @@ export default function EaselShowcaseTemplate({
               <Svg d={ICON.eye} size={16} />
             </span>
             <h2 className="ea-h2 ea-mid">
-              <Words parts={["My vision", "\n", "for any product technology."]} />
+              <Words parts={["Projetos", "\n", "Destaque"]} />
             </h2>
             <p className="ea-small ea-wrapv">
-              <Words parts={["Every interface tells a story. Kedhareswer sketches it, prototypes it and ships it, so the story survives the build."]} at={6} />
+              <Words parts={[PROJECTS_TEXT]} at={2} />
             </p>
             <a className="ea-textlink ea-late" href="#story">
-              Read more
+              Ver projetos
             </a>
           </div>
           <div className="ea-doodles" aria-hidden="true">
@@ -864,21 +1003,21 @@ export default function EaselShowcaseTemplate({
                 <div key="info" ref={(el) => { deck2.current[j] = el }} className="ea-card ea-info">
                   <span className="ea-info-dot" />
                   <b>
-                    Where Design
+                    Desenvolvedor
                     <br />
-                    Meets Code
+                    Full Stack
                   </b>
-                  <small>Project 02</small>
-                  <p>Every project gets a designer and an engineer, and both of them are Kedhareswer.</p>
+                  <small>Douglas Michelini</small>
+                  <p>Transformando ideias complexas em experiências digitais fluidas.</p>
                 </div>
               ) : (
                 <div key={k + j} ref={(el) => { deck2.current[j] = el }} className="ea-card ea-c2">
-                  <img src={pic(k)} alt="" width={230} height={230} draggable={false} />
+                  <img src={local(k)} alt="" width={230} height={230} draggable={false} />
                 </div>
               ),
             )}
           </div>
-          <span className="ea-tag ea-orange ea-t8">@client2</span>
+          <span className="ea-tag ea-orange ea-t8">@typescript</span>
         </div>
       </section>
 
@@ -887,7 +1026,7 @@ export default function EaselShowcaseTemplate({
         <div ref={bandA} className="ea-band ea-band-a" aria-hidden="true">
           {AV_TOP.map((k, i) => (
             <span key={k} className="ea-av" style={{ ["--y" as string]: ((i * 37) % 5) * 12 - 24 + "px" } as CSSProperties}>
-              <img src={pic(k)} alt="" width={88} height={88} />
+              <img src={local(k)} alt="" width={88} height={88} />
             </span>
           ))}
         </div>
@@ -899,67 +1038,67 @@ export default function EaselShowcaseTemplate({
             <Words parts={["You will find yourself", "\n", "among my people"]} />
           </h2>
           <p className="ea-small ea-center">
-            <Words parts={["Clients, collaborators and friends who have built something with Kedhareswer."]} at={7} />
+            <Words parts={["Clients, collaborators and friends who have built something with Douglas Michelini."]} at={7} />
           </p>
         </div>
         <div ref={bandB} className="ea-band ea-band-b" aria-hidden="true">
           {AV_BOT.map((k, i) => (
             <span key={k} className="ea-av" style={{ ["--y" as string]: ((i * 53) % 5) * 12 - 24 + "px" } as CSSProperties}>
-              <img src={pic(k)} alt="" width={88} height={88} />
+              <img src={local(k)} alt="" width={88} height={88} />
             </span>
           ))}
         </div>
       </section>
 
       {/* ---------- story bento ---------- */}
-      <section id="story" className="ea-sec ea-story" aria-label="Projects">
+      <section id="story" className="ea-sec ea-story" aria-label="Projetos">
         <div className="ea-wrap">
           <div data-rv className="ea-center-head">
             <p className="ea-eyebrow">
-              <Words parts={["MY STORY", ["TELLING", "ea-bluew"]]} />
+              <Words parts={["MEUS", ["PROJETOS", "ea-bluew"]]} />
             </p>
             <h2 className="ea-h2 ea-center">
-              <Words parts={["Every project", "\n", "tells a story"]} at={3} />
+              <Words parts={["Cada projeto", "\n", "conta uma história"]} at={2} />
             </h2>
           </div>
           <div className="ea-bento">
             <div className="ea-col">
               <article className="ea-bcard ea-b1" data-rv>
                 <span className="ea-label">
-                  <Svg d={ICON.play} size={8} fill="currentColor" stroke={0} /> Play Video
+                  <Svg d={ICON.play} size={8} fill="currentColor" stroke={0} /> Projeto 01
                 </span>
                 <div className="ea-pile" aria-hidden="true">
-                  <img src={pic("b3")} alt="" width={150} height={150} />
-                  <img src={pic("b1")} alt="" width={150} height={150} />
-                  <img src={pic("a6")} alt="" width={150} height={150} />
-                  <span className="ea-tag ea-blue ea-t9">@client1</span>
+                  <img src={local(P[1].img)} alt="" width={150} height={150} />
+                  <img src={local(P[3].img)} alt="" width={150} height={150} />
+                  <img src={local(P[0].img)} alt="" width={150} height={150} />
+                  <span className="ea-tag ea-blue ea-t9">@react</span>
                 </div>
-                <h3 className="ea-h4">Project 01 — Connect, Create, Ship</h3>
-                <p className="ea-small">A storefront that lets makers sell a piece of their story, designed and built end to end.</p>
-                <a className="ea-chipbtn" href={mail}>
-                  How it works?
+                <h3 className="ea-h4">{P[0].name}</h3>
+                <p className="ea-small">{P[0].goal}</p>
+                <a className="ea-chipbtn" href={projectHref(P[0])} {...EXT}>
+                  {P[0].site ? "Visitar" : "Repositório"}
                 </a>
               </article>
               <article className="ea-bcard ea-img" data-rv>
                 <div className="ea-photo">
-                  <img src={pic("c2")} alt="Project 03 — pop-art campaign" width={550} height={300} />
+                  <img src={local(P[2].img)} alt={P[2].name} width={550} height={300} />
                 </div>
-                <h3 className="ea-h4">Project 03 — Spin Your Idea into Gold</h3>
-                <p className="ea-small">A launch campaign where the brand, the site and the motion came from one desk.</p>
-                <a className="ea-chipbtn" href={mail}>
-                  See the case
+                <h3 className="ea-h4">{P[2].name}</h3>
+                <p className="ea-small">{P[2].goal}</p>
+                <a className="ea-chipbtn" href={projectHref(P[2])} {...EXT}>
+                  {P[2].site ? "Visitar" : "Repositório"}
                 </a>
               </article>
             </div>
             <div className="ea-col ea-col-r">
               <article className="ea-bcard ea-img" data-rv>
                 <div className="ea-photo ea-blueph">
-                  <img src={pic("c1")} alt="Project 02 — eye illustration" width={550} height={300} />
+                  <img src={local(P[1].img)} alt={P[1].name} width={550} height={300} />
                 </div>
-                <h3 className="ea-h4">Project 02 — Where Design Breathes Code</h3>
-                <p className="ea-small">A design system that ships as React components, so the mock-up and the product never drift.</p>
-                <a className="ea-chipbtn" href={mail}>
-                  Read more
+                <h3 className="ea-h4">{P[1].name}</h3>
+                <p className="ea-small">{P[1].goal}</p>
+                <a className="ea-chipbtn" href={projectHref(P[1])} {...EXT}>
+                  {P[1].site ? "Visitar" : "Repositório"}
                 </a>
               </article>
               <article className="ea-bcard ea-phone-wrap" data-rv>
@@ -967,11 +1106,15 @@ export default function EaselShowcaseTemplate({
                   <Svg d={ICON.pen} size={13} />
                 </span>
                 <div className="ea-phone">
-                  <small>Project 04</small>
-                  <em>Expression feels</em>
-                  <b>Personal Identity</b>
-                  <em>Crafted by Kedhareswer</em>
-                  <small>an identity kit for a solo founder</small>
+                  <small>Projeto 04</small>
+                  <em>{P[3].stack}</em>
+                  <b>{P[3].name}</b>
+                  <em>{P[3].impact}</em>
+                  <small>
+                    <a href={projectHref(P[3])} {...EXT}>
+                      {P[3].site ? "Visitar" : "Repositório"}
+                    </a>
+                  </small>
                 </div>
               </article>
             </div>
@@ -980,41 +1123,43 @@ export default function EaselShowcaseTemplate({
       </section>
 
       {/* ---------- archive carousel ---------- */}
-      <section id="archive" className="ea-sec ea-market" aria-label="Archive">
+      <section id="archive" className="ea-sec ea-market" aria-label="Arquivo">
         <div className="ea-wrap">
           <div className="ea-market-grid">
             <div data-rv className="ea-market-head">
               <p className="ea-eyebrow">
-                <Words parts={["GET MORE", ["CLOSER", "ea-purplew"]]} />
+                <Words parts={["MAIS", ["PROJETOS", "ea-purplew"]]} />
               </p>
               <h2 className="ea-h2">
-                <Words parts={["Archive", "\n", "for Creativity"]} at={2} />
+                <Words parts={["Arquivo", "\n", "de projetos"]} at={2} />
               </h2>
               <p className="ea-small ea-wrapm">
-                <Words parts={["Posters, studies and side projects Kedhareswer makes between client work."]} at={5} />
+                <Words parts={["Outros projetos de estudo e prática."]} at={5} />
               </p>
               <div className="ea-mini-arrows ea-arc-arrows">
-                <button type="button" aria-label="Previous project" onClick={() => setArc((a) => Math.max(0, a - 1))} disabled={arc === 0}>
+                <button type="button" aria-label="Projeto anterior" onClick={() => setArc((a) => Math.max(0, a - 1))} disabled={arc === 0}>
                   <Svg d={ICON.left} size={11} stroke={2} />
                 </button>
-                <button type="button" aria-label="Next project" onClick={() => setArc((a) => Math.min(ARCHIVE.length - 4, a + 1))} disabled={arc >= ARCHIVE.length - 4}>
+                <button type="button" aria-label="Próximo projeto" onClick={() => setArc((a) => Math.min(ARCHIVE.length - 4, a + 1))} disabled={arc >= ARCHIVE.length - 4}>
                   <Svg d={ICON.right} size={11} stroke={2} />
                 </button>
               </div>
             </div>
             <div className="ea-market-right" data-rv>
-              <a className="ea-viewall" href="#archive">
-                View All
+              <a className="ea-viewall" href={LINKS.github} {...EXT}>
+                Ver todos
               </a>
               <div className="ea-rail">
                 <div className="ea-rail-track" style={{ ["--ci" as string]: arc } as CSSProperties}>
                   {ARCHIVE.map((a, i) => (
-                    <figure key={a.k} className="ea-arc" style={{ ["--i" as string]: i } as CSSProperties}>
-                      <div>
-                        <img src={pic(a.k)} alt={a.t} width={220} height={220} />
-                      </div>
-                      <figcaption>{a.t}</figcaption>
-                    </figure>
+                    <a key={a.k} href={a.href} {...EXT} aria-label={a.t} style={{ display: "block", flex: "none", color: "inherit", textDecoration: "none" }}>
+                      <figure className="ea-arc" style={{ ["--i" as string]: i } as CSSProperties}>
+                        <div>
+                          <img src={local(a.k)} alt={a.t} width={220} height={220} />
+                        </div>
+                        <figcaption>{a.t}</figcaption>
+                      </figure>
+                    </a>
                   ))}
                 </div>
               </div>
@@ -1027,39 +1172,39 @@ export default function EaselShowcaseTemplate({
       </section>
 
       {/* ---------- stage 3: banner → portrait wall ---------- */}
-      <section ref={s3} className="ea-stage" style={stage(3)} aria-label="Featured portrait">
+      <section ref={s3} className="ea-stage" style={stage(3)} aria-label="Sobre mim">
         <div ref={pin3} className="ea-pin" style={{ height }}>
           <div ref={appRow} className="ea-lead">
             <p className="ea-eyebrow">
-              FEATURED <span className="ea-orangew">PROJECT</span>
+              SOBRE <span className="ea-orangew">MIM</span>
             </p>
             <h2 className="ea-h2 ea-center">
-              Project 07,
+              Douglas
               <br />
-              up close.
+              Michelini
             </h2>
-            <p className="ea-small ea-center">A portrait campaign Kedhareswer art-directed, then built the site around.</p>
+            <p className="ea-small ea-center">{ROLE}</p>
           </div>
           {WALL.map((k, i) =>
             k ? (
               <div key={k} ref={(el) => { wall.current[i] = el }} className="ea-wall" aria-hidden="true">
-                <img src={pic(k)} alt="" width={195} height={210} />
+                <img src={local(k)} alt="" width={195} height={210} />
               </div>
             ) : null,
           )}
           <div ref={banner} className="ea-orange">
-            <img src={pic("muse")} alt="Project 07 — portrait in orange" width={780} height={920} />
+            <img src={local("image_avatar.jpeg")} alt="Douglas Michelini" width={780} height={920} />
             <div className="ea-orange-ui">
-              <span className="ea-tag ea-redtag ea-t10">@kedhar</span>
+              <span className="ea-tag ea-redtag ea-t10">@DouglassenG</span>
               <button type="button" className={"ea-like" + (liked ? " on" : "")} aria-pressed={liked} onClick={() => setLiked((l) => !l)}>
                 <Svg d={ICON.heart} size={10} fill={liked ? "currentColor" : "none"} stroke={2} />
-                Like
+                Curtir
               </button>
               <div className="ea-by">
-                <img src={pic("v4")} alt="" width={28} height={28} />
+                <img src={local("icon.png")} alt="" width={28} height={28} />
                 <span>
-                  <b>Project 07</b>
-                  <small>by Kedhareswer</small>
+                  <b>Douglas Michelini</b>
+                  <small>{ROLE}</small>
                 </span>
               </div>
             </div>
@@ -1078,7 +1223,7 @@ export default function EaselShowcaseTemplate({
               <Words parts={["Engagements"]} />
             </h2>
             <p className="ea-small ea-wrapp">
-              <Words parts={["Hire Kedhareswer by the month, the quarter or the year. Every plan is design and front-end in one."]} at={1} />
+              <Words parts={["Hire Douglas Michelini by the month, the quarter or the year. Every plan is design and front-end in one."]} at={1} />
             </p>
           </div>
           <div className="ea-plans" data-rv>
@@ -1109,33 +1254,33 @@ export default function EaselShowcaseTemplate({
       </section>
 
       {/* ---------- lime marquee + falling doodles ---------- */}
-      <section ref={limeRef} className="ea-sec ea-lime-sec" aria-label="Open for projects">
+      <section ref={limeRef} className="ea-sec ea-lime-sec" aria-label="Contato">
         <div className="ea-lime">
           <span className="ea-water" aria-hidden="true">
-            KDR
+            DM
           </span>
           <div className="ea-marquee">
             <div ref={limeTrack} className="ea-mtrack">
               {[0, 1].map((rep) => (
                 <span key={rep} className="ea-mrun" aria-hidden={rep === 1}>
-                  Founders can ride
+                  Douglas Michelini
                   <span className="ea-mthumbs">
                     <i style={{ background: "#e8203a" }} />
-                    <img src={pic("a2")} alt="" width={44} height={44} />
-                    <img src={pic("b4")} alt="" width={44} height={44} />
-                    <small>2026 POSTER</small>
+                    <img src={local(P[0].img)} alt="" width={44} height={44} />
+                    <img src={local(P[1].img)} alt="" width={44} height={44} />
+                    <small>PORTFÓLIO</small>
                   </span>
-                  Inspired by people
+                  {ROLE}
                   <span className="ea-mthumbs">
-                    <img src={pic("a3")} alt="" width={44} height={44} />
+                    <img src={local(P[3].img)} alt="" width={44} height={44} />
                   </span>
-                  New work every month
+                  Transformando ideias complexas em experiências digitais fluidas
                   <span className="ea-mthumbs">
-                    <img src={pic("b6")} alt="" width={44} height={44} />
+                    <img src={local(P[4].img)} alt="" width={44} height={44} />
                   </span>
-                  Kedhareswer · Open for projects
+                  Contato: {email}
                   <span className="ea-mthumbs">
-                    <img src={pic("a1")} alt="" width={44} height={44} />
+                    <img src={local(P[6].img)} alt="" width={44} height={44} />
                   </span>
                 </span>
               ))}
@@ -1152,35 +1297,35 @@ export default function EaselShowcaseTemplate({
       </section>
 
       {/* ---------- meet + archive ---------- */}
-      <section className="ea-sec ea-duo" aria-label="Get in touch">
+      <section className="ea-sec ea-duo" aria-label="Contato e GitHub">
         <div className="ea-wrap ea-duo-grid">
           <article className="ea-meet" data-rv>
-            <img src={pic("meet")} alt="Portrait on magenta" width={590} height={650} />
+            <img src={local("image_avatar.jpeg")} alt="Douglas Michelini" width={590} height={650} />
             <div>
               <Svg d={ICON.pen} size={14} />
               <h3 className="ea-h3">
-                Meet
+                Contato
                 <br />
-                <span>me in person</span>
+                <span>Vamos conversar</span>
               </h3>
-              <p className="ea-small">Coffee, a call or a workshop: Kedhareswer is always happy to talk shop.</p>
-              <a className="ea-btn ea-btn-w" href={mail}>
-                Let&apos;s Meet
+              <p className="ea-small">E-mail, WhatsApp ou LinkedIn.</p>
+              <a className="ea-btn ea-btn-w" href={LINKS.whatsapp} {...EXT}>
+                WhatsApp
               </a>
             </div>
           </article>
           <article className="ea-arch" data-rv>
-            <img src={pic("archive")} alt="Sculptural flower" width={575} height={650} />
+            <img src={local("hero.jpg")} alt="" width={575} height={650} />
             <div>
               <Svg d={ICON.spark} size={14} />
               <h3 className="ea-h3">
-                Archive
+                GitHub
                 <br />
-                of new work
+                Todos os repositórios
               </h3>
-              <p className="ea-small">Every case study, poster and experiment, filed in one place and kept up to date.</p>
-              <a className="ea-btn" href="#archive">
-                Archives
+              <p className="ea-small">Código de todos os projetos deste portfólio.</p>
+              <a className="ea-btn" href={LINKS.github} {...EXT}>
+                GitHub
               </a>
             </div>
           </article>
@@ -1192,51 +1337,61 @@ export default function EaselShowcaseTemplate({
         <div className="ea-wrap ea-foot-grid">
           <div>
             <h2 className="ea-h4">
-              My work, your product. <span className="ea-foot-dots" aria-hidden="true">•••</span>
+              Douglas Michelini <span className="ea-foot-dots" aria-hidden="true">•••</span>
             </h2>
-            <p className="ea-small">Kedhareswer designs and builds interfaces for founders and teams. Write any time:</p>
+            <p className="ea-small">{ROLE}. Fale comigo:</p>
             <a className="ea-mail" href={mail}>
               {email}
             </a>
             <div className="ea-socials">
-              {[ICON.mail, ICON.globe, ICON.grid, ICON.spark].map((d, i) => (
-                <a key={i} href={mail} aria-label={["Email", "Studio", "Work", "Notes"][i]}>
-                  <Svg d={d} size={12} />
+              {[
+                { d: ICON.mail, h: mail, l: "E-mail" },
+                { d: ICON.github, h: LINKS.github, l: "GitHub" },
+                { d: ICON.linkedin, h: LINKS.linkedin, l: "LinkedIn" },
+                { d: ICON.whatsapp, h: LINKS.whatsapp, l: "WhatsApp" },
+              ].map((s) => (
+                <a key={s.l} href={s.h} {...(s.h.startsWith("http") ? EXT : {})} aria-label={s.l + " de Douglas Michelini"}>
+                  <Svg d={s.d} size={12} />
                 </a>
               ))}
             </div>
           </div>
           <ul>
-            <li>Get Started</li>
-            <li>
-              <i className="ea-dot" /> Start a project <span className="ea-new">New</span>
-            </li>
-            <li>Pricing</li>
-            <li>
-              <a href={mail}>Contact</a>
-            </li>
-            <li>Process</li>
-            <li>Archive</li>
+            {NAV.map((n, i) => (
+              <li key={n.l}>
+                {i === 1 && <i className="ea-dot" />}
+                <a href={n.h === "mailto" ? mail : n.h} {...(n.h.startsWith("http") ? EXT : {})}>
+                  {n.l}
+                </a>
+              </li>
+            ))}
           </ul>
           <ul>
-            <li>My Story</li>
-            <li>
-              <i className="ea-dot" /> Case studies
-            </li>
-            <li>
-              Lab <span className="ea-soon">Soon</span>
-            </li>
+            {[P[0], P[1], P[3]].map((p, i) => (
+              <li key={p.name}>
+                {i === 0 && <i className="ea-dot" />}
+                <a href={projectHref(p)} {...EXT}>
+                  {p.name}
+                </a>
+              </li>
+            ))}
           </ul>
           <ul>
-            <li>Privacy &amp; Policy</li>
             <li>
-              <a href={mail}>Contact Us</a>
+              <a href={mail}>E-mail</a>
             </li>
             <li>
-              Api <span className="ea-soon">Soon</span>
+              <a href={LINKS.linkedin} {...EXT}>
+                LinkedIn
+              </a>
+            </li>
+            <li>
+              <a href={LINKS.whatsapp} {...EXT}>
+                WhatsApp
+              </a>
             </li>
           </ul>
-          <p className="ea-copy">© 2026 Kedhareswer. All rights reserved.</p>
+          <p className="ea-copy">© {new Date().getFullYear()} Douglas Michelini. Todos os direitos reservados.</p>
         </div>
       </footer>
     </div>
