@@ -1035,10 +1035,10 @@ export default function EaselShowcaseTemplate({
             <Svg d={ICON.logo} size={14} stroke={2} />
           </span>
           <h2 className="ea-h2 ea-center">
-            <Words parts={["You will find yourself", "\n", "among my people"]} />
+            <Words parts={["“Em algum lugar, alguma coisa incrível ", "\n", "está esperando para ser descoberta.”"]} />
           </h2>
           <p className="ea-small ea-center">
-            <Words parts={["Clients, collaborators and friends who have built something with Douglas Michelini."]} at={7} />
+            <Words parts={["Carl Sagan"]} at={7} />
           </p>
         </div>
         <div ref={bandB} className="ea-band ea-band-b" aria-hidden="true">
@@ -1210,48 +1210,7 @@ export default function EaselShowcaseTemplate({
             </div>
           </div>
         </div>
-      </section>
-
-      {/* ---------- membership ---------- */}
-      <section id="pricing" className="ea-sec ea-price" aria-label="Pricing">
-        <div className="ea-wrap ea-price-grid">
-          <div data-rv>
-            <span className="ea-eye">
-              <Svg d={ICON.mail} size={15} />
-            </span>
-            <h2 className="ea-h3">
-              <Words parts={["Engagements"]} />
-            </h2>
-            <p className="ea-small ea-wrapp">
-              <Words parts={["Hire Douglas Michelini by the month, the quarter or the year. Every plan is design and front-end in one."]} at={1} />
-            </p>
-          </div>
-          <div className="ea-plans" data-rv>
-            <div className="ea-plan ea-p1">
-              <small>Monthly</small>
-              <b>
-                <sup>$</sup>9<small>.9k</small>
-              </b>
-              <em>One product, one month</em>
-            </div>
-            <div className="ea-plan ea-p2">
-              <small>Quarterly</small>
-              <span className="ea-pop-pill">Popular</span>
-              <b>
-                <sup>$</sup>12<small>.9k</small>
-              </b>
-              <em>Regular monthly payment</em>
-            </div>
-            <div className="ea-plan ea-p3">
-              <small>Annually</small>
-              <b>
-                <sup>$</sup>19<small>.9k</small>
-              </b>
-              <em>A standing design partner</em>
-            </div>
-          </div>
-        </div>
-      </section>
+      </section>  
 
       {/* ---------- lime marquee + falling doodles ---------- */}
       <section ref={limeRef} className="ea-sec ea-lime-sec" aria-label="Contato">
