@@ -330,7 +330,7 @@ const NAV = [
   { l: "Projetos", h: "#work" },
   { l: "Destaques", h: "#story" },
   { l: "Arquivo", h: "#archive" },
-  { l: "Contato", h: "mailto" },
+  { l: "LinkedIn", h: LINKS.linkedin },
   { l: "GitHub", h: LINKS.github },
 ]
 
